@@ -4,11 +4,14 @@ from collections import Counter
 
 #清洗数据
 def clear(df):
-    df['yyyy_mm'] = df['comment_time'].str[0:7]#转换时间格式
-    df = df[['yyyy_mm', 'content', 'product_id']]#保留列
+    #转换时间格式
+    df['yyyy_mm'] = df['comment_time'].str[0:7]
+    #保留列
+    df = df[['yyyy_mm', 'content', 'product_id']]
     df_g = df[~df['content'].str.contains('此用户没有填写评论|<b></b>此<b></b>用<b></b>户<b></b>没<b></b>有<b></b>填<b></b>写<b></b>评<b></b>论')]#删除无效评论
     df_g = df.groupby(['product_id', 'yyyy_mm'])['content'].apply(list)
-    df_g = df_g.apply(lambda x:','.join(x))#按时间产品列表化评论
+    #按时间产品列表化评论
+    df_g = df_g.apply(lambda x:','.join(x))
     df_g = df_g.reset_index()
     return df_g
 #计算词频
