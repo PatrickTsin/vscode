@@ -22,19 +22,24 @@ def word_freq(row):
     seg_list = jieba.lcut(content, cut_all=False)
     #去除停用词
     cleaned_list = [x for x in seg_list if x not in list_stop]
-    dict_freq = Counter(cleaned_list)#计数
+    #计数
+    dict_freq = Counter(cleaned_list)
     df_freq = pd.DataFrame.from_dict(dict_freq, orient='index').reset_index().rename(columns={'index':'word', 0:'frequency'})#创建DataFrame
     df_freq['product_id'] = row['product_id']
-    df_freq['yyyy_mm'] = row['yyyy_mm']#写入数据
+    #写入数据
+    df_freq['yyyy_mm'] = row['yyyy_mm']
     return df_freq
 #生成最终数据
 def result():
-    df_s = pd.DataFrame()#创建新DataFrame
-    df_g = clear(df)#清洗数据
+    #创建新DataFrame
+    df_s = pd.DataFrame()
+    #清洗数据
+    df_g = clear(df)
+    #按行（时间-产品）导入数据计算词频，结果返回新DataFrame
     for row in df_g.iterrows():
         row = row[1]
         df_n = word_freq(row)
-        df_s = df_s.append(df_n)#按行（时间-产品）导入数据计算词频，结果返回新DataFrame
+        df_s = df_s.append(df_n)
     df_s = df_s.sort_values(by=['yyyy_mm', 'product_id', 'frequency'], ascending=False)#按时间-产品排序
     df_s = df_s.reset_index()
     df_s = df_s[['product_id', 'yyyy_mm', 'word', 'frequency']]
