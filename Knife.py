@@ -20,7 +20,8 @@ def word_freq(row):
     content = row['content']
     #切词
     seg_list = jieba.lcut(content, cut_all=False)
-    cleaned_list = [x for x in seg_list if x not in list_stop]#去除停用词
+    #去除停用词
+    cleaned_list = [x for x in seg_list if x not in list_stop]
     dict_freq = Counter(cleaned_list)#计数
     df_freq = pd.DataFrame.from_dict(dict_freq, orient='index').reset_index().rename(columns={'index':'word', 0:'frequency'})#创建DataFrame
     df_freq['product_id'] = row['product_id']
